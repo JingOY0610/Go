@@ -9,8 +9,8 @@ def init_board(n):
     :return: 2d array of size n*n, representing the board.
     '''
     board = [[0 for x in range(n)] for y in range(n)]  # Empty space marked as 0
-    # White pieces marked as 1
-    # Black pieces marked as 2
+    # Black pieces marked as 1
+    # White pieces marked as 2
     return board
 
 # Detect neighbor pieces of a single piece
@@ -125,9 +125,9 @@ def place_chess(board, i, j, player):
     :param player: white or black
     :return: boolean indicating whether the placement is valid.
     '''
-    if player == 'white':
+    if player == 'black':
         piece_type = 1
-    elif player == 'black':
+    elif player == 'white':
         piece_type = 2
     else:
         print('Invalid input.')
@@ -148,15 +148,15 @@ def valid_place_check(board, i, j, piece_type):
     :return: boolean indicating whether the placement is valid.
     '''   
     if not (i >= 0 and i < len(board)):
-        print(('Invalid placement. x coordinate should be in the range 1 to {}.').format(len(board) - 1))
+        print(('Invalid placement. row should be in the range 1 to {}.').format(len(board) - 1))
         return False
     if not (j >= 0 and j < len(board)):
-        print(('Invalid placement. y coordinate should be in the range 1 to {}.').format(len(board) - 1))
+        print(('Invalid placement. column should be in the range 1 to {}.').format(len(board) - 1))
         return False
     if board[i][j] != 0:
         print('Invalid placement. There is already a chess in this position.')
         return False
-    test_board = board.copy()
+    test_board = [[row[c] for c in range(len(board))] for row in board]
     test_board[i][j] = piece_type
     if not find_qi(test_board, i, j):
         print('Invalid placement. No Qi found in this position.')
@@ -188,7 +188,7 @@ if __name__ == "__main__":
         print('Usage: python go.py n. Where n is the dimension of the board n*n.')
         sys.exit()
     n = int(sys.argv[1]) # Size of the board
-    board = init_board(8) # Initialize the board of size n*n
+    board = init_board(n) # Initialize the board of size n*n
     black_move = True # Black(X) chess plays first
     input_hint = True # Print hints for input
     print('----------Input "exit" to exit the program----------')
@@ -216,7 +216,8 @@ if __name__ == "__main__":
             continue
 
         # If invalid input, continue the loop. Else it places a chess on the board.
-        if not place_chess(board, i, j, player): 
+        if not place_chess(board, i, j, player):
+            visualize_board(board) 
             continue
 
         remove_died_pieces(board) # Remove the dead pieces
