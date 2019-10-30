@@ -24,7 +24,7 @@ class GO:
         '''
         Initialize a board with size n*n.
 
-        :param n: width and height of chess board.
+        :param n: width and height of the board.
         :return: None.
         '''
         board = [[0 for x in range(n)] for y in range(n)]  # Empty space marked as 0
@@ -51,7 +51,7 @@ class GO:
 
     def detect_neighbor(self, i, j):
         '''
-        Detect all the neighbors of a given piece.
+        Detect all the neighbors of a given stone.
 
         :param i: row number of the board.
         :param j: column number of the board.
@@ -68,7 +68,7 @@ class GO:
 
     def detect_neighbor_ally(self, i, j):
         '''
-        Detect the neibored allies of a given piece.
+        Detect the neighbor allies of a given stone.
 
         :param i: row number of the board.
         :param j: column number of the board.
@@ -86,7 +86,7 @@ class GO:
 
     def ally_dfs(self, i, j):
         '''
-        Using DFS to search for all allies of a given piece.
+        Using DFS to search for all allies of a given stone.
 
         :param i: row number of the board.
         :param j: column number of the board.
@@ -105,11 +105,11 @@ class GO:
 
     def find_liberty(self, i, j):
         '''
-        Find liberty of a given piece. If a group of allied pieces has no liberty, they all die.
+        Find liberty of a given stone. If a group of allied stones has no liberty, they all die.
 
         :param i: row number of the board.
         :param j: column number of the board.
-        :return: boolean indicating whether the given piece still has liberty.
+        :return: boolean indicating whether the given stone still has liberty.
         '''
         board = self.board
         ally_members = self.ally_dfs(i, j)
@@ -124,7 +124,7 @@ class GO:
 
     def find_died_pieces(self, piece_type):
         '''
-        Find the died pieces that has no liberty in the board for a given piece type.
+        Find the died stones that has no liberty in the board for a given piece type.
 
         :param piece_type: 1('X') or 2('O').
         :return: a list containing the dead pieces row and column(row, column).
@@ -143,7 +143,7 @@ class GO:
 
     def remove_died_pieces(self, piece_type):
         '''
-        Remove the dead pieces in the board.
+        Remove the dead stones in the board.
 
         :param piece_type: 1('X') or 2('O').
         :return: locations of dead pieces.
@@ -156,7 +156,7 @@ class GO:
 
     def remove_certain_pieces(self, positions):
         '''
-        Remove the pieces of certain locations.
+        Remove the stones of certain locations.
 
         :param positions: a list containing the pieces to be removed row and column(row, column)
         :return: None.
@@ -168,7 +168,7 @@ class GO:
 
     def place_chess(self, i, j, piece_type, previous_died_pieces):
         '''
-        Place a chess piece in the board.
+        Place a chess stone in the board.
 
         :param i: row number of the board.
         :param j: column number of the board.
@@ -289,6 +289,22 @@ class GO:
                     return False
         return True
 
+    def score(self, piece_type):
+        '''
+        Get score of a player by counting the number of stones.
+
+        :param piece_type: 1('X') or 2('O').
+        :return: boolean indicating whether the game should end.
+        '''
+
+        board = self.board
+        cnt = 0
+        for i in range(self.size):
+            for j in range(self.size):
+                if board[i][j] == piece_type:
+                    cnt += 1
+        return cnt          
+
     def judge_winner(self):
         '''
         Judge the winner of the game by number of pieces for each player.
@@ -297,12 +313,8 @@ class GO:
         :return: piece type of winner of the game (0 if it's a tie).
         '''        
 
-        board = self.board
-        cnt_1 = cnt_2 = 0
-        for i in range(self.size):
-            for j in range(self.size):
-                if board[i][j] == 1: cnt_1 += 1
-                elif board[i][j] == 2: cnt_2 += 1
+        cnt_1 = self.score(1)
+        cnt_2 = self.score(2)
         if cnt_1 > cnt_2 + self.komi: return 1
         elif cnt_1 < cnt_2 + self.komi: return 2
         else: return 0
