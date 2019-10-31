@@ -59,7 +59,7 @@ class ManualPlayer(Player):
                 sys.exit()
             try:
                 input_coordinates = user_input.strip().split(',')
-                i, j = int(input_coordinates[0]) - 1, int(input_coordinates[1]) - 1
+                i, j = int(input_coordinates[0]), int(input_coordinates[1])
                 return i, j
             except:
                 print('Invalid input. Input format: row, column. E.g. 2,3\n')
